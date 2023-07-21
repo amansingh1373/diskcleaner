@@ -6,7 +6,7 @@
 #include "includes/deleteFiles.h"
 
 void spaceAvail(){
-    std::vector<std::string> drives = GetLogicalDriveNames();
+    std::vector<std::string> drives = GetLogicalDriveNames(); //diskutilization.h
 
     for (const auto& drive : drives) {
         std::string d = drive;
@@ -15,9 +15,9 @@ void spaceAvail(){
         std::replace(d.begin(), d.end(), '\\', '/');
         
         ULARGE_INTEGER freeBytesAvailable, totalNumberOfBytes,totalNumberOfFreeBytes;
-        if (GetDiskFreeSpaceEx(long_string, &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes)) {
+        if (GetDiskFreeSpaceEx(long_string, &freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes)) { //windows.h
             //Calculate the percentage of free space on the drive
-            double percentageFree = (static_cast<double>(freeBytesAvailable.QuadPart) / totalNumberOfBytes.QuadPart) * 100.0;
+            double percentageFree = (static_cast<double>(freeBytesAvailable.QuadPart) / totalNumberOfBytes.QuadPart) * 100.0; 
             std::cout << drive<< std::endl;
             std::cout << "Percentage of free space on drive: " << percentageFree << "%" << std::endl;
         } else {
@@ -28,7 +28,7 @@ void spaceAvail(){
 }
 
 void categorize(){
-    std::vector<std::string> drives = GetLogicalDriveNames();
+    std::vector<std::string> drives = GetLogicalDriveNames(); //diskutilization.h
 
     for (const auto& drive : drives) {
         std::map<std::string, __int64> fileCategories;
@@ -37,7 +37,7 @@ void categorize(){
         fileCategories["Images"] = 0;
         fileCategories["Other"] = 0;
 
-        GetDirectorySizeAndCategorize(drive, fileCategories,fileCount);
+        GetDirectorySizeAndCategorize(drive, fileCategories,fileCount); //diskutilization.h
 
         std::cout << "Drive: " << drive << std::endl;
         std::cout << "Space Utilization Breakdown:" << std::endl;
@@ -54,7 +54,7 @@ void categorize(){
 std::vector<std::vector<std::string>> detectDuplicateFolder(const fs::path directory_path){
     std::vector<std::vector<std::string>> finalResult;
     try {
-        std::map<std::string, std::vector<fs::path>> duplicate_files = find_duplicate_files(directory_path);
+        std::map<std::string, std::vector<fs::path>> duplicate_files = find_duplicate_files(directory_path); //detectFiles.h
         std::cout << "Duplicate files:" << std::endl;
         for (const auto& entry : duplicate_files) {
             if (entry.second.size() > 1) {
@@ -85,7 +85,7 @@ void askAndDelete(char opt,std::vector<std::string> result,std::unordered_map<in
     opt = tolower(opt);
     bool flag = false;
     switch(opt){
-        case 'a':   flag = deleteFiles(result);
+        case 'a':   flag = deleteFiles(result); //deleteFiles.h
                     if(!flag){
                         std::cout<<"There is some error.\n";
                     }else{
@@ -97,14 +97,14 @@ void askAndDelete(char opt,std::vector<std::string> result,std::unordered_map<in
                         std::string dfn = ""; //delete filepath number
                         std::cin>>dfn;
                         std::vector<std::string> ftbd; //files to be deleted
-                        seperatevalues(dfn,ftbd);
+                        seperatevalues(dfn,ftbd); //main.cpp
                         /*verify that the input is correct*/
                         std::vector<std::string> newresult;
                         for(auto &x : ftbd){
                             int val = stoi(x);
                             newresult.push_back(paths[val]);
                         }
-                        flag = deleteFiles(newresult);
+                        flag = deleteFiles(newresult); //deleteFiles.h
                         if(!flag){
                             std::cout<<"There is some error.\n";
                         }else{
@@ -119,7 +119,7 @@ void askAndDelete(char opt,std::vector<std::string> result,std::unordered_map<in
 void duplicateFunctionality(char* argv[]){
     try{
         const char* filepath = argv[2];
-        std::vector<std::vector<std::string>> result = detectDuplicateFolder(filepath);
+        std::vector<std::vector<std::string>> result = detectDuplicateFolder(filepath); //main.cpp
         std::unordered_map<int,std::unordered_map<int,std::string>> whichduplicate;
         int i = 1,j = 1;
         
@@ -154,7 +154,7 @@ void duplicateFunctionality(char* argv[]){
                                     ch = toupper(ch);
                                     if(ch == 'Y'){
                                         for(auto &x : result){
-                                            flag = flag && deleteDuplicateFiles(x);
+                                            flag = flag && deleteDuplicateFiles(x); //deleteFiles.h
                                         }
                                         if(!flag){
                                             std::cout<<"There is some error.\n";
@@ -169,7 +169,7 @@ void duplicateFunctionality(char* argv[]){
                                     std::string res = "";
                                     std::vector<std::string> duplis_no;
                                     std::cin>>res;
-                                    seperatevalues(res,duplis_no);
+                                    seperatevalues(res,duplis_no); //main.cpp
                                     std::vector<std::string> newresult;
                                     for(auto &x : duplis_no){
                                         std::cout<<"===============================     "<<x<<"     =======================================\n";
@@ -177,12 +177,12 @@ void duplicateFunctionality(char* argv[]){
                                         std::string dfn = ""; //delete filepath number
                                         std::cin>>dfn;
                                         std::vector<std::string> temp;
-                                        seperatevalues(dfn,temp);
+                                        seperatevalues(dfn,temp); //main.cpp
                                         for(auto &it : temp){
                                             newresult.push_back(whichduplicate[stoi(x)][stoi(it)]);
                                         }
                                     }
-                                    bool flag = deleteFiles(newresult);
+                                    bool flag = deleteFiles(newresult); //deleteFiles.h
                                     if(!flag){
                                         std::cout<<"There is some error.";
                                     }else{
@@ -206,7 +206,7 @@ void dctdelLargeFunctionality(char *argv[]){
         std::vector<std::string> result;
         try{
             long long maxsize = atoi(argv[3]) * 1024 * 1024;
-            result = detectLargeFiles(dirpath,maxsize);
+            result = detectLargeFiles(dirpath,maxsize); //detectFiles.h
             std::unordered_map<int,std::string> paths;
             int i = 1;
             for(auto &x : result){
@@ -222,12 +222,12 @@ void dctdelLargeFunctionality(char *argv[]){
                     char opt = 'a';
                     std::cout<<"Do you want to delete all the files or select some files to delete:(a/c)\n";
                     std::cin>>opt;
-                    askAndDelete(opt,result,paths);
+                    askAndDelete(opt,result,paths); //main.cpp
                 }
             }
             
         }catch(...){
-            result = detectLargeFiles(dirpath);
+            result = detectLargeFiles(dirpath); //detectFiles.h
             std::unordered_map<int,std::string> paths;
             int i = 1;
             for(auto &x : result){
@@ -246,7 +246,7 @@ void dctdelLargeFunctionality(char *argv[]){
                     char opt = 'a';
                     std::cout<<"Do you want to delete all the files or select some files to delete:(a/c)\n";
                     std::cin>>opt;
-                    askAndDelete(opt,result,paths);
+                    askAndDelete(opt,result,paths); //main.cpp
                 }
             }
         }
@@ -261,7 +261,7 @@ void extensionFunctionality(char *argv[]){
         std::vector<std::string> result;
         try{
             std::string ext = argv[3];
-            result = detectFileByExtension(dirpath,ext);
+            result = detectFileByExtension(dirpath,ext); //detectFile.h
             std::unordered_map<int,std::string> paths;
             int i = 1;
             for(auto &x : result){
@@ -277,7 +277,7 @@ void extensionFunctionality(char *argv[]){
                     char opt = 'a';
                     std::cout<<"Do you want to delete all the files or select some files to delete:(a/c)\n";
                     std::cin>>opt;
-                    askAndDelete(opt,result,paths);
+                    askAndDelete(opt,result,paths); //main.cpp
                 }
             }
             
@@ -324,34 +324,34 @@ int main(int argc, char* argv[]){
 
     int val = 0;
     switch(mp[cmd]){
-        case 1: showCommands();
+        case 1: showCommands(); //main.cpp
                 break;
-        case 2: spaceAvail();
+        case 2: spaceAvail(); //main.cpp
                 break;
-        case 3: categorize();
+        case 3: categorize(); //main.cpp
                 break;
         case 4: /*detect and then asks for deletion*/
-                duplicateFunctionality(argv);
+                duplicateFunctionality(argv); //main.cpp
                 break;
         case 5: /*detects large file and then asks for deletion*/
-                dctdelLargeFunctionality(argv);
+                dctdelLargeFunctionality(argv); //main.cpp
                 break;
         case 6: /*detects file with same extension and then asks for deletion*/
-                extensionFunctionality(argv);
+                extensionFunctionality(argv); //main.cpp
                 break;
         case 7: /*detects file with same extension and then asks for deletion*/
-                extensionFunctionality(argv);
+                extensionFunctionality(argv); //main.cpp
                 break;
         case 8: /*detects large file and then asks for deletion*/
-                dctdelLargeFunctionality(argv);
+                dctdelLargeFunctionality(argv); //main.cpp
                 break;
         case 9: /*detect and then asks for deletion*/
-                duplicateFunctionality(argv);
+                duplicateFunctionality(argv); //main.cpp
                 break;
         case 10: {
                     try{
                         const char* dirpaths = argv[2];
-                        folderBifurcation(dirpaths,true);
+                        folderBifurcation(dirpaths,true); //detectFiles.h
                     }catch(...){
                         std::cerr<<"directory parameter empty";
                     }

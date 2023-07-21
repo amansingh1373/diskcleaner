@@ -160,7 +160,7 @@ std::map<std::string, std::vector<fs::path>> find_duplicate_files(const fs::path
         if (fs::is_regular_file(entry)) {
             const fs::path& file_path = entry.path();
             try {
-                std::string hash = compute_sha256(file_path);
+                std::string hash = compute_sha256(file_path); //detectFiles.h
                 hash_to_files_map[hash].push_back(file_path);
             } catch (const std::exception& e) {
                 std::cerr << "Error processing file: " << file_path << " - " << e.what() << std::endl;
