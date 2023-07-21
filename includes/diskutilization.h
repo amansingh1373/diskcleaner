@@ -1,14 +1,13 @@
-#include <iostream>
 #include <Windows.h>
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <cstdio>
+#include <dirent.h>
 
 
 std::vector<std::string> videoExtensions = { 

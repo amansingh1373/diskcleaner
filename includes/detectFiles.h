@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
+#include <Windows.h>
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
