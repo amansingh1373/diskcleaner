@@ -6,8 +6,69 @@
 #include <algorithm>
 
 
-std::vector<std::string> videoExtensions = { ".mp4", ".avi", ".mkv", ".mov" };
-std::vector<std::string> imageExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+std::vector<std::string> videoExtensions = { 
+    ".mp4", 
+    ".avi", 
+    ".mkv", 
+    ".mov",
+    ".wmv",
+    ".flv",
+    ".webm",
+    ".mpeg",
+    ".mpg",
+    ".3gp",
+    ".swf",
+    ".vob",
+    ".rm",
+    ".rmvb",
+    ".ts",
+    ".m4v",
+    ".m2ts",
+    ".divx",
+    ".ogv",
+    ".ogm",
+    ".asf",
+    ".qt",
+    ".mxf",
+    ".dav"
+};
+
+std::vector<std::string> imageExtensions = { 
+    ".jpg", 
+    ".jpeg", 
+    ".png", 
+    ".gif",
+    ".bmp",
+    ".tiff",
+    ".webp",
+    ".svg",
+    ".ico",
+    ".tif",
+    ".jfif",
+    ".jpe",
+    ".jif",
+    ".jfi",
+    ".jp2",
+    ".j2k",
+    ".jpf",
+    ".jpx",
+    ".jpm",
+    ".djvu",
+    ".djv",
+    ".pnm",
+    ".ppm",
+    ".pgm",
+    ".pbm",
+    ".hdr",
+    ".exr",
+    ".raw",
+    ".cr2",
+    ".nef",
+    ".orf",
+    ".arw",
+    ".dng"
+};
+
 
 
 std::vector<std::string> GetLogicalDriveNames() {
@@ -16,11 +77,13 @@ std::vector<std::string> GetLogicalDriveNames() {
     GetLogicalDriveStrings(MAX_PATH, buffer);
 
     char* drive = buffer;
+    std::cout<<"Drive Available:"<<std::endl;
     while (*drive) {
+        std::cout<<drive<<std::endl;
         drives.push_back(drive);
         drive += strlen(drive) + 1;
     }
-
+    std::cout<<std::endl;
     return drives;
 }
 
@@ -31,7 +94,7 @@ bool GetDriveSpaceInfo(const std::string& drive, ULARGE_INTEGER& freeBytesAvaila
     return false;
 }
 
-void GetDirectorySizeAndCategorize(const std::string& path, std::map<std::string, __int64>& fileCategories) {
+void GetDirectorySizeAndCategorize(const std::string& path, std::map<std::string, __int64>& fileCategories, std::map<std::string, long long> &fileCount) {
     WIN32_FIND_DATA findFileData;
     HANDLE hFind = FindFirstFile((path + "\\*").c_str(), &findFileData);
 
@@ -39,7 +102,7 @@ void GetDirectorySizeAndCategorize(const std::string& path, std::map<std::string
         do {
             if (strcmp(findFileData.cFileName, ".") != 0 && strcmp(findFileData.cFileName, "..") != 0) {
                 if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    GetDirectorySizeAndCategorize(path + "\\" + findFileData.cFileName, fileCategories);
+                    GetDirectorySizeAndCategorize(path + "\\" + findFileData.cFileName, fileCategories,fileCount);
                 } else {
                     // Categorize the file based on its extension
                     std::string extension = findFileData.cFileName;
@@ -49,10 +112,13 @@ void GetDirectorySizeAndCategorize(const std::string& path, std::map<std::string
                         std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
                         if (std::find(videoExtensions.begin(), videoExtensions.end(), extension) != videoExtensions.end()) {
                             fileCategories["Videos"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCount["Videos"]++;
                         } else if (std::find(imageExtensions.begin(), imageExtensions.end(), extension) != imageExtensions.end()) {
                             fileCategories["Images"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCount["Images"]++;
                         } else {
                             fileCategories["Other"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCount["Others"]++;
                         }
                     }
                 }
