@@ -104,6 +104,20 @@
 </div>
 
 <div align="center">
+  <h3>7. help</h3>
+</div>
+
+<div align="center">
+  <pre>
+    <code>diskcleaner help</code>
+  </pre>
+  <p>
+    <strong>Description:</strong><br>
+    This command provides you details of all the command available
+  </p>
+</div>
+
+<div align="center">
   <h2>Conclusion</h2>
 </div>
 
@@ -112,9 +126,9 @@
     This concludes the overview of the Disk Cleaner application and its available functionalities. By using these commands, you can effectively manage disk space and remove unwanted files from your system.
   </p>
 </div>
-
-<div align="center">
-  <p>
-    <em>Please note that this documentation is just a dummy example and not the actual official documentation for the application. For the real application, you would need to create comprehensive and accurate documentation to guide users in using the features effectively.</em>
-  </p>
+<div align="right">
+  <h2>Contributors:</h2>
+  <p>Ambuj Shukla</p>
+  <p>Shubhanshu Gupta</p>
+  <p>Aman Singh</p>
 </div>
