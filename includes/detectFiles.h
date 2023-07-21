@@ -12,6 +12,10 @@
 
 namespace fs = std::filesystem;
 
+std::unordered_map<std::string,int> nof;
+std::unordered_map<std::string,int> sof;
+
+
 std::size_t compute_hash(const fs::path& file_path) {
     std::ifstream file(file_path.string(), std::ios::binary);
     if (!file) {
@@ -78,8 +82,10 @@ std::string getFileExtension(const std::string& filename) {
     return "";
 }
 
+std::vector<std::string> filepaths;
+
 std::vector<std::string> detectLargeFiles(const char* basePath, long long maxSize = 1024 * 1024 * 10) {
-    std::vector<std::string> filepaths;
+    
     DIR* dir = opendir(basePath);
 
     if (!dir) {
@@ -104,8 +110,10 @@ std::vector<std::string> detectLargeFiles(const char* basePath, long long maxSiz
     return filepaths;
 }
 
+std::vector<std::string> filecollection;
+
 std::vector<std::string> detectFileByExtension(const char* basePath, const std::string& targetExtension) {
-    std::vector<std::string> filecollection;
+    
     DIR* dir = opendir(basePath);
 
     if (!dir) {
@@ -127,4 +135,120 @@ std::vector<std::string> detectFileByExtension(const char* basePath, const std::
     }
     closedir(dir);
     return filecollection;
+}
+
+
+
+
+
+
+std::string getFileType(const std::string& filePath) {
+    std::map<std::string, std::string> fileTypes = {
+        // Images
+        {".jpg", "Image"},
+        {".jpeg", "Image"},
+        {".png", "Image"},
+        {".gif", "Image"},
+        {".bmp", "Image"},
+        {".tiff", "Image"},
+        {".webp", "Image"},
+        {".svg", "Image"},
+
+        // Videos
+        {".mp4", "Video"},
+        {".avi", "Video"},
+        {".mkv", "Video"},
+        {".mov", "Video"},
+        {".wmv", "Video"},
+        {".flv", "Video"},
+        {".webm", "Video"},
+        {".m4v", "Video"},
+
+        // Documents
+        {".doc", "Document"},
+        {".docx", "Document"},
+        {".pdf", "Document"},
+        {".txt", "Document"},
+        {".rtf", "Document"},
+        {".odt", "Document"},
+        {".ppt", "Document"},
+        {".pptx", "Document"},
+        {".xls", "Document"},
+        {".xlsx", "Document"},
+
+        // Audio
+        {".mp3", "Audio"},
+        {".wav", "Audio"},
+        {".ogg", "Audio"},
+        {".flac", "Audio"},
+        {".aac", "Audio"},
+        {".wma", "Audio"},
+
+        // Compressed Archives
+        {".zip", "Archive"},
+        {".rar", "Archive"},
+        {".7z", "Archive"},
+        {".tar", "Archive"},
+        {".gz", "Archive"},
+        {".bz2", "Archive"},
+
+        // Executable
+        {".exe", "Executable"},
+
+        // Add more extensions and their corresponding types as needed
+    };
+
+    size_t dotIndex = filePath.find_last_of(".");
+    if (dotIndex != std::string::npos) {
+        std::string ext = filePath.substr(dotIndex);
+        auto it = fileTypes.find(ext);
+        if (it != fileTypes.end()) {
+            return it->second;
+        }
+    }
+
+    return "Other";
+}
+
+
+void folderBifurcation(const char* basePath,bool flag) {
+    DIR* dir = opendir(basePath);
+    if (!dir) {
+        return;
+    }
+
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL) {
+        std::string path = std::string(basePath) + "/" + std::string(entry->d_name);
+
+        if (isRegularFile(path.c_str())) {
+            std::string fileExtension = getFileExtension(std::string(entry->d_name));
+            if (!fileExtension.empty()) {
+                std::string fileType = getFileType(path);
+                long long fileSize = getFileSize(path.c_str());
+                nof[fileType]++;
+                sof[fileType] += fileSize;
+            }
+        } else if (isDirectory(path.c_str()) && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+            folderBifurcation(path.c_str(),false);
+        }
+    }
+
+    if(flag){
+        std::cout<<"========================================="<<std::endl;
+        std::cout<<"========================================="<<std::endl;
+        std::cout<<"Number of files:"<<std::endl;
+        for(auto &x : nof){
+            std::cout<<">"<<x.first<<" "<<x.second<<std::endl;
+        }
+        std::cout<<"========================================="<<std::endl;
+        std::cout<<"size of files:"<<std::endl;
+        for(auto &x : sof){
+            std::cout<<">"<<x.first<<" "<<x.second<<std::endl;
+        }
+        
+        std::cout<<"========================================="<<std::endl;
+        std::cout<<"========================================="<<std::endl<<std::endl;
+    }
+    closedir(dir);
 }
