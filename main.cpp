@@ -54,7 +54,7 @@ void categorize(){
 std::vector<std::vector<std::string>> detectDuplicateFolder(const fs::path directory_path){
     std::vector<std::vector<std::string>> finalResult;
     try {
-        std::map<std::size_t, std::vector<fs::path>> duplicate_files = find_duplicate_files(directory_path);
+        std::map<std::string, std::vector<fs::path>> duplicate_files = find_duplicate_files(directory_path);
 
         std::cout << "Duplicate files:" << std::endl;
         for (const auto& entry : duplicate_files) {
