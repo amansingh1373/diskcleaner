@@ -1,3 +1,13 @@
+<div align="left">
+  <h3>How To Use:</h3>
+  <p>
+    If you have a C++ compiler already installed, you just have to execute the run.bat file.
+  </p>
+  <p>
+    *Note:* C++ compiler must be present to execute this project.
+  </p>
+</div>
+<hr>
 <div align="center">
   <h1>Disk Cleaner Application Documentation</h1>
   <p>
@@ -34,7 +44,7 @@
   </pre>
   <p>
     <strong>Description:</strong><br>
-    This command categorizes files in the specified directory into Image, Video, and Other types. It also provides the count of files in each category and their respective sizes.
+    This command categorizes files in the specified directory into Image, Video, audios, archives, executables types. It also provides the count of files in each category and their respective sizes.
   </p>
 </div>
 
