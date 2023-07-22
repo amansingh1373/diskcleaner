@@ -73,7 +73,46 @@ std::vector<std::string> imageExtensions = {
     ".dng"
 };
 
+std::vector<std::string> documentExtensions = {
+    ".doc", 
+    ".docx", 
+    ".ppt", 
+    ".pptx", 
+    ".xls", 
+    ".xlsx", 
+    ".pdf", 
+    ".txt", 
+    ".rtf", 
+    ".odt"
+};
 
+std::vector<std::string> archiveExtensions = {
+    ".zip", 
+    ".rar", 
+    ".7z", 
+    ".tar", 
+    ".gz", 
+    ".bz2", 
+    ".xz", 
+    ".iso"
+};
+
+std::vector<std::string> audioExtensions = {
+    ".mp3", 
+    ".wav", 
+    ".ogg", 
+    ".flac", 
+    ".aac", 
+    ".wma", 
+    ".m4a"
+};
+
+std::vector<std::string> executableExtensions = {
+    ".exe", 
+    ".msi", 
+    ".bat", 
+    ".sh"
+};
 
 std::vector<std::string> GetLogicalDriveNames() {
     std::vector<std::string> drives;
@@ -120,8 +159,20 @@ void GetDirectorySizeAndCategorize(const std::string& path, std::map<std::string
                         } else if (std::find(imageExtensions.begin(), imageExtensions.end(), extension) != imageExtensions.end()) {
                             fileCategories["Images"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
                             fileCount["Images"]++;
+                        } else if (std::find(documentExtensions.begin(), documentExtensions.end(), extension) != documentExtensions.end()) {
+                            fileCategories["Documents"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCount["Documents"]++;
+                        } else if (std::find(archiveExtensions.begin(), archiveExtensions.end(), extension) != archiveExtensions.end()) {
+                            fileCategories["Archives"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCount["Archives"]++;
+                        } else if (std::find(audioExtensions.begin(), audioExtensions.end(), extension) != audioExtensions.end()) {
+                            fileCategories["Audios"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCount["Audios"]++;
+                         } else if (std::find(executableExtensions.begin(), executableExtensions.end(), extension) != executableExtensions.end()) {
+                            fileCategories["Executables"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCount["Executables"]++;
                         } else {
-                            fileCategories["Other"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
+                            fileCategories["Others"] += (static_cast<__int64>(findFileData.nFileSizeLow) | (static_cast<__int64>(findFileData.nFileSizeHigh) << 32));
                             fileCount["Others"]++;
                         }
                     }

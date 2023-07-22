@@ -27,17 +27,29 @@ void spaceAvail(){
     }
 }
 
-void categorize(){
+void categorize() {
     std::vector<std::string> drives = GetLogicalDriveNames(); //diskutilization.h
 
     for (const auto& drive : drives) {
         std::map<std::string, __int64> fileCategories;
-        std::map<std::string, long long> fileCount{{"Videos",0},{"Images",0},{"Others",0}};
+        std::map<std::string, long long> fileCount{
+            {"Videos", 0},
+            {"Images", 0},
+            {"Documents", 0},
+            {"Archives", 0},
+            {"Audios", 0},
+            {"Executables", 0},
+            {"Others", 0}
+        };
         fileCategories["Videos"] = 0;
         fileCategories["Images"] = 0;
-        fileCategories["Other"] = 0;
+        fileCategories["Documents"] = 0;
+        fileCategories["Archives"] = 0;
+        fileCategories["Audios"] = 0;
+        fileCategories["Executables"] = 0;
+        fileCategories["Others"] = 0;
 
-        GetDirectorySizeAndCategorize(drive, fileCategories,fileCount); //diskutilization.h
+        GetDirectorySizeAndCategorize(drive, fileCategories, fileCount); //diskutilization.h
 
         std::cout << "Drive: " << drive << std::endl;
         std::cout << "Space Utilization Breakdown:" << std::endl;
@@ -45,7 +57,7 @@ void categorize(){
             std::cout << category.first << " size: " << category.second << " bytes" << std::endl;
         }
         for (const auto& category : fileCount) {
-            std::cout << category.first << " count: " << category.second << " bytes" << std::endl;
+            std::cout << category.first << " count: " << category.second << std::endl;
         }
         std::cout << "=================================================================" << std::endl;
     }

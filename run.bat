@@ -1,10 +1,22 @@
-IF NOT EXIST "disk_cleaner.exe" (
-	@ECHO OFF
-	g++ main.cpp -o disk_cleaner.exe
-)
 @ECHO OFF
-REM Run diskcleaner.exe with the specified arguments
-"%~dp0disk_cleaner.exe" help
+IF NOT EXIST "diskcleaner.exe" (
+    ECHO Loading...
+    g++ main.cpp -o diskcleaner.exe
+)
+ECHO Loaded
+@ECHO OFF
+REM Run disk_cleaner.exe with the specified arguments
+"%~dp0diskcleaner.exe" help
 
-REM Optional: Pause the script to see the output before the Command Prompt window closes
+REM Optional: Pause the script to see the output before continuing
 PAUSE
+
+REM Allow the user to write commands in the same window
+:UserInput
+SET /P "userCommand=Enter a command (or type 'exit' to quit): "
+IF /I "%userCommand%"=="exit" (
+    EXIT /B
+) ELSE (
+    %userCommand%
+)
+GOTO UserInput
